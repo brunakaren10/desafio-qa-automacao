@@ -7,6 +7,8 @@ Este repositório contém a entrega do desafio técnico para a vaga de QA, com f
 ## 📁 Estrutura do Projeto
 
 
+
+
 ├── k6-load-test/ # Testes de carga com K6
 ├── api-tests/ # Testes automatizados de API
 ├── e2e-tests/ # Testes End-to-End com Cucumber
