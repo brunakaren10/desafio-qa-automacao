@@ -17,12 +17,7 @@ jobs:
 
       - name: Instalar K6
         run: |
-          sudo apt update
-          sudo apt install -y gnupg software-properties-common
-          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 33BD3F6D
-          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt update
-          sudo apt install -y k6
+         sudo snap install k6
 
       - name: Executar testes de performance
         run: k6 run k6/loadtest.js
