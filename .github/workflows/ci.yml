@@ -8,30 +8,33 @@ on:
 
 jobs:
   test-api-k6:
-  - name: Adicionar chave pública k6
-  run: |
-    curl -fsSL https://dl.k6.io/key.gpg | sudo tee /usr/share/keyrings/k6-archive-keyring.gpg > /dev/null
+    name: Testes de Performance com k6
+    runs-on: ubuntu-latest
 
-    - name: Adicionar repositório k6 usando signed-by
-  run: |
-    echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-
-     - name: Atualizar e instalar k6
-  run: |
-    sudo apt-get update
-    sudo apt-get install -y k6
-
-  
-  steps:
+    steps:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Instalar K6
+      - name: Instalar dependências para k6
         run: |
-         sudo snap install k6
+          sudo apt-get update
+          sudo apt-get install -y gnupg curl
 
-      - name: Executar testes de performance
-        run: k6 run k6/loadtest.js
+      - name: Adicionar chave pública do repositório k6
+        run: |
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+
+      - name: Adicionar repositório do k6
+        run: |
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+
+      - name: Instalar k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Executar testes de performance com k6
+        run: k6 run tests/k6-test/loadtest.js
 
   test-web-playwright:
     name: Testes E2E com Playwright
@@ -47,7 +50,7 @@ jobs:
           node-version: 20
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
       - name: Instalar browsers do Playwright
         run: npx playwright install --with-deps
@@ -69,9 +72,9 @@ jobs:
           node-version: 20
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
-      - name: Instalar Appium
+      - name: Instalar Appium e driver
         run: |
           npm install -g appium
           appium driver install uiautomator2
@@ -84,4 +87,3 @@ jobs:
 
       - name: Executar testes mobile
         run: npx wdio run ./mobile-tests/wdio.conf.js
-
