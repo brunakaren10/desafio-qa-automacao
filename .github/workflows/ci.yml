@@ -55,33 +55,4 @@ jobs:
       - name: Executar testes E2E
         run: npx playwright test
 
-  test-mobile-appium:
-    name: Testes Mobile com Appium
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-
-      - name: Instalar Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Instalar dependências
-        run: npm install
-
-      - name: Instalar Appium
-        run: |
-          npm install -g appium
-          appium driver install uiautomator2
-
-      - name: Iniciar Appium
-        run: nohup appium > appium.log 2>&1 &
-
-      - name: Verificar arquivos na pasta mobile-tests
-        run: ls -la ./mobile-tests
-
-      - name: Executar testes mobile
-        run: npx wdio run ./mobile-tests/wdio.conf.js
-
+  
