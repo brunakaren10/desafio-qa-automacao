@@ -84,3 +84,4 @@ jobs:
 
       - name: Executar testes mobile
         run: npx wdio run ./mobile-tests/wdio.conf.js
+
