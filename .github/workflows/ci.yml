@@ -8,10 +8,23 @@ on:
 
 jobs:
   test-api-k6:
-    name: Testes de Performance com K6
-    runs-on: ubuntu-latest
+   - name: Importar chave pública do repositório k6
+  run: |
+    curl -fsSL https://dl.k6.io/key.gpg | sudo tee /usr/share/keyrings/k6-archive-keyring.gpg > /dev/null
 
-    steps:
+      - name: Adicionar repositório k6
+  run: |
+    echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+
+    - name: Atualizar APT e instalar k6
+  run: |
+    sudo apt-get update
+    sudo apt-get install k6
+
+    - name: Executar testes de performance
+  run: k6 run k6/loadtest.js
+  
+  steps:
       - name: Checkout do código
         uses: actions/checkout@v3
 
