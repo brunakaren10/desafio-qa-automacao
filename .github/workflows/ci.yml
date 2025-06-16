@@ -1,0 +1,77 @@
+name: Pipeline QA
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-api-k6:
+    name: Testes de Performance com K6
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar K6
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg software-properties-common
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 33BD3F6D
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt update
+          sudo apt install -y k6
+
+      - name: Executar testes de performance
+        run: k6 run k6/test-api.js
+
+  test-web-playwright:
+    name: Testes E2E com Playwright
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Instalar browsers do Playwright
+        run: npx playwright install --with-deps
+
+      - name: Executar testes E2E
+        run: npx playwright test
+
+  test-mobile-appium:
+    name: Testes Mobile com Appium
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Instalar Appium
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+
+      - name: Iniciar Appium
+        run: nohup appium > appium.log 2>&1 &
+
+      - name: Executar testes mobile
+        run: npx wdio run wdio.conf.js
