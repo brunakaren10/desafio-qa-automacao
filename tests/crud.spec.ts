@@ -8,7 +8,7 @@ test.describe('API - CRUD de Usuário', () => {
 
   test.beforeAll(async () => {
     apiContext = await request.newContext({
-      baseURL: process.env.API_BASE_URL,
+      baseURL: 'https://reqres.in/api/',
       extraHTTPHeaders: {
         'x-api-key': process.env.API_TOKEN || '',
         'Content-Type': 'application/json',

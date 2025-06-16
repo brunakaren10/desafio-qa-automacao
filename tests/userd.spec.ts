@@ -7,7 +7,7 @@ test.describe('API - User', () => {
 
   test.beforeAll(async ({ playwright }) => {
     apiContext = await request.newContext({
-      baseURL: process.env.API_BASE_URL, 
+      baseURL: 'https://reqres.in/api/', 
     });
   });
   test.afterAll(async () => {
