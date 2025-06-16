@@ -1,4 +1,17 @@
+# dependências
+**/node_modules/
+
+# relatórios de teste
+allure-results/
+playwright-report/
+test-results/
+chromedriver-mobile/
+
+# arquivos de log e cache
+*.log
+.cache/
+dist/
+coverage/
+
+# arquivos do sistema/macOS
 .DS_Store
-.env
-.allure-results
-.node_modules
