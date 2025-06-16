@@ -1,6 +1,9 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request ,APIRequestContext} from '@playwright/test';
 import dotenv from 'dotenv';
 
+
+
+let apiContext: APIRequestContext;
 dotenv.config();
 
 test.describe('API - CRUD de Usuário', () => {
