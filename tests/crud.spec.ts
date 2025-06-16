@@ -1,6 +1,9 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request ,APIRequestContext} from '@playwright/test';
 import dotenv from 'dotenv';
 
+
+
+let apiContext: APIRequestContext;
 dotenv.config();
 
 test.describe('API - CRUD de Usuário', () => {
@@ -8,7 +11,7 @@ test.describe('API - CRUD de Usuário', () => {
 
   test.beforeAll(async () => {
     apiContext = await request.newContext({
-      baseURL: process.env.API_BASE_URL,
+      baseURL: 'https://reqres.in/api/',
       extraHTTPHeaders: {
         'x-api-key': process.env.API_TOKEN || '',
         'Content-Type': 'application/json',

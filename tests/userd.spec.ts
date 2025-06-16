@@ -1,5 +1,5 @@
 
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request,APIRequestContext} from '@playwright/test';
 
 
 test.describe('API - User', () => {
@@ -7,7 +7,7 @@ test.describe('API - User', () => {
 
   test.beforeAll(async ({ playwright }) => {
     apiContext = await request.newContext({
-      baseURL: process.env.API_BASE_URL, 
+      baseURL: 'https://reqres.in/api/', 
     });
   });
   test.afterAll(async () => {
