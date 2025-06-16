@@ -34,7 +34,7 @@ jobs:
           sudo apt-get install -y k6
 
       - name: Executar testes de performance com k6
-        run: k6 run tests/k6-test/loadtest.js
+        run: k6 run ./k6-test/loadtest.js
 
   test-web-playwright:
     name: Testes E2E com Playwright
