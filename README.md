@@ -12,13 +12,12 @@ Este repositório contém a entrega do desafio técnico para a vaga de QA, com f
 ✅ Integração com CI/CD (GitHub Actions)
 
 # Estrutura do Projeto
-.
+-e2e-api-tests/             # Testes E2E/API com Playwright 
+-mobile-tests/              # Testes automatizados Mobile com Appium + WebdriverIO
+-k6-test/                   # Testes de performance com K6
+-github/workflows/          # Pipeline CI/CD (GitHub Actions)
+-README.md                  # Este arquivo
 
-├── e2e-api-tests/             # Testes E2E-API com Playwright 
-├── mobile-tests/          # Testes automatizados Mobile com Appium + WebdriverIO
-├── k6-test/               # Testes de performance com K6
-├── .github/workflows/     # Pipeline CI/CD (GitHub Actions)
-├── README.md              # Este arquivo
 
 # 1. Como Rodar os Testes
 # Node.js (versão recomendada: 18+)
