@@ -38,7 +38,9 @@ Este repositório contém a entrega do desafio técnico para a vaga de QA, com f
   
 # 2. Clonar o Repositório
   git clone https://github.com/brunakaren10/desafio-qa-automacao.git
+  
   cd desafio-qa-automacao
+  
   npm install
 
 
