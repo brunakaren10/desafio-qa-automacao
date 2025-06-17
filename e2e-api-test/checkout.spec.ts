@@ -3,6 +3,7 @@ import { LoginPage } from '../src/pages/LoginPage';
 import { InventoryPage } from '../src/pages/InventoryPage';
 import { CartPage } from '../src/pages/CartPage';
 import { CheckoutPage } from '../src/pages/CheckoutPage';
+import { allure } from 'allure-playwright';
 
 test('Fluxo completo de checkout com sucesso', async ({ page }) => {
   const loginPage = new LoginPage(page);

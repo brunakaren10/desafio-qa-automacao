@@ -1,5 +1,6 @@
 
 import { test, expect, request,APIRequestContext} from '@playwright/test';
+import { allure } from 'allure-playwright';
 
 
 test.describe('API - User', () => {

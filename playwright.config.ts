@@ -1,6 +1,9 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests', 
-  reporter: [['list'], ['allure-playwright']],
-});
+  testDir: './e2e-tests',
+  reporter: [
+    ['list'],
+    ['allure-playwright', { outputFolder: 'allure-results' }]
+  ],
+})

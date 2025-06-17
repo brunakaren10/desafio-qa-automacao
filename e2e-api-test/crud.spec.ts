@@ -1,6 +1,8 @@
 import { test, expect, request ,APIRequestContext} from '@playwright/test';
 import dotenv from 'dotenv';
 
+import { allure } from 'allure-playwright';
+
 
 
 let apiContext: APIRequestContext;
@@ -13,7 +15,7 @@ test.describe('API - CRUD de Usuário', () => {
     apiContext = await request.newContext({
       baseURL: 'https://reqres.in/api/',
       extraHTTPHeaders: {
-        'x-api-key': process.env.API_TOKEN || '',
+        'x-api-key': 'reqres-free-v1',
         'Content-Type': 'application/json',
       },
     });
