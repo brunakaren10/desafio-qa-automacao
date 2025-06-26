@@ -43,8 +43,7 @@ test.describe('API - CRUD de Usuário', () => {
       data: {},
     });
 
-    // API fake retorna 201 mesmo vazio
-    expect(response.status()).toBe(201);
+    expect(response.status()).toBe(201); // API fake aceita vazio
 
     const body = await response.json();
     expect(body).toHaveProperty('id');
@@ -56,10 +55,9 @@ test.describe('API - CRUD de Usuário', () => {
     await allure.description('Tenta criar usuário com payload inválido e espera erro ou rejeição.');
 
     const response = await apiContext.post('users', {
-      data: { name: '', job: 12345 }, // name vazio, job numérico inválido
+      data: { name: '', job: 12345 }, // name vazio e job inválido
     });
 
-    // Pode variar dependendo da API real, aqui aceitamos erro ou sucesso fake
     expect([201, 400, 422]).toContain(response.status());
   });
 
@@ -92,7 +90,6 @@ test.describe('API - CRUD de Usuário', () => {
     await allure.description('Tenta obter usuário com ID inválido (string) e espera erro.');
 
     const response = await apiContext.get('users/abc');
-    // Pode ser 400 ou 404 dependendo da API
     expect([400, 404]).toContain(response.status());
   });
 
@@ -133,7 +130,6 @@ test.describe('API - CRUD de Usuário', () => {
       data: { name: 'Nome', job: 'Cargo' },
     });
 
-    // Pode ser 404 ou 200 dependendo da API fake
     expect([200, 404]).toContain(response.status());
   });
 
