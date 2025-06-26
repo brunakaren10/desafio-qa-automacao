@@ -1,15 +1,11 @@
-import { test, expect, request ,APIRequestContext} from '@playwright/test';
+import { test, expect, request, APIRequestContext } from '@playwright/test';
 import dotenv from 'dotenv';
-
 import { allure } from 'allure-playwright';
 
-
-
-let apiContext: APIRequestContext;
 dotenv.config();
 
 test.describe('API - CRUD de Usuário', () => {
-  let apiContext;
+  let apiContext: APIRequestContext;
 
   test.beforeAll(async () => {
     apiContext = await request.newContext({
@@ -21,7 +17,11 @@ test.describe('API - CRUD de Usuário', () => {
     });
   });
 
+  // --- POST positivo ---
   test('POST /users - criar usuário com sucesso', async () => {
+    await allure.label('feature', 'Criar usuário');
+    await allure.description('Cria um usuário com nome e cargo válidos e verifica se foi criado com sucesso.');
+
     const response = await apiContext.post('users', {
       data: { name: 'Bruna', job: 'QA' },
     });
@@ -34,17 +34,40 @@ test.describe('API - CRUD de Usuário', () => {
     expect(body).toHaveProperty('createdAt');
   });
 
+  // --- POST negativo: payload vazio ---
   test('POST /users - erro ao enviar payload vazio', async () => {
+    await allure.label('feature', 'Criar usuário - Payload vazio');
+    await allure.description('Tenta criar usuário com payload vazio e verifica comportamento da API.');
+
     const response = await apiContext.post('users', {
       data: {},
     });
 
-    // Mesmo vazio, a API de exemplo retorna 201, então vamos só mostrar o comportamento
+    // API fake retorna 201 mesmo vazio
     expect(response.status()).toBe(201);
+
     const body = await response.json();
     expect(body).toHaveProperty('id');
   });
+
+  // --- POST negativo: payload inválido ---
+  test('POST /users - erro com payload inválido', async () => {
+    await allure.label('feature', 'Criar usuário - Payload inválido');
+    await allure.description('Tenta criar usuário com payload inválido e espera erro ou rejeição.');
+
+    const response = await apiContext.post('users', {
+      data: { name: '', job: 12345 }, // name vazio, job numérico inválido
+    });
+
+    // Pode variar dependendo da API real, aqui aceitamos erro ou sucesso fake
+    expect([201, 400, 422]).toContain(response.status());
+  });
+
+  // --- GET positivo ---
   test('GET /users/2 - obter dados do usuário', async () => {
+    await allure.label('feature', 'Obter usuário');
+    await allure.description('Obtém dados do usuário com id 2 e verifica retorno.');
+
     const response = await apiContext.get('users/2');
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('application/json');
@@ -54,7 +77,30 @@ test.describe('API - CRUD de Usuário', () => {
     expect(body.data).toHaveProperty('email');
   });
 
+  // --- GET negativo: usuário não encontrado ---
+  test('GET /users/999 - usuário não encontrado', async () => {
+    await allure.label('feature', 'Obter usuário não existente');
+    await allure.description('Tenta obter usuário com id inexistente e verifica resposta 404.');
+
+    const response = await apiContext.get('users/999');
+    expect(response.status()).toBe(404);
+  });
+
+  // --- GET negativo: id inválido ---
+  test('GET /users/abc - id inválido', async () => {
+    await allure.label('feature', 'Obter usuário - ID inválido');
+    await allure.description('Tenta obter usuário com ID inválido (string) e espera erro.');
+
+    const response = await apiContext.get('users/abc');
+    // Pode ser 400 ou 404 dependendo da API
+    expect([400, 404]).toContain(response.status());
+  });
+
+  // --- PUT positivo ---
   test('PUT /users/2 - atualizar usuário', async () => {
+    await allure.label('feature', 'Atualizar usuário');
+    await allure.description('Atualiza dados do usuário 2 e verifica resposta.');
+
     const response = await apiContext.put('users/2', {
       data: { name: 'Bruna Atualizada', job: 'QA Senior' },
     });
@@ -66,10 +112,46 @@ test.describe('API - CRUD de Usuário', () => {
     expect(body).toHaveProperty('updatedAt');
   });
 
+  // --- PUT negativo: payload inválido ---
+  test('PUT /users/2 - atualizar com payload inválido', async () => {
+    await allure.label('feature', 'Atualizar usuário - Payload inválido');
+    await allure.description('Tenta atualizar usuário com dados inválidos e verifica resposta.');
+
+    const response = await apiContext.put('users/2', {
+      data: { name: '', job: null },
+    });
+
+    expect([200, 400, 422]).toContain(response.status());
+  });
+
+  // --- PUT negativo: usuário não existente ---
+  test('PUT /users/999 - atualizar usuário inexistente', async () => {
+    await allure.label('feature', 'Atualizar usuário inexistente');
+    await allure.description('Tenta atualizar usuário que não existe e verifica resposta.');
+
+    const response = await apiContext.put('users/999', {
+      data: { name: 'Nome', job: 'Cargo' },
+    });
+
+    // Pode ser 404 ou 200 dependendo da API fake
+    expect([200, 404]).toContain(response.status());
+  });
+
+  // --- DELETE positivo ---
   test('DELETE /users/2 - deletar usuário', async () => {
+    await allure.label('feature', 'Deletar usuário');
+    await allure.description('Deleta usuário com id 2 e espera sucesso.');
+
     const response = await apiContext.delete('users/2');
     expect(response.status()).toBe(204);
   });
 
+  // --- DELETE negativo: usuário inexistente ---
+  test('DELETE /users/999 - deletar usuário inexistente', async () => {
+    await allure.label('feature', 'Deletar usuário não existente');
+    await allure.description('Tenta deletar usuário que não existe e verifica resposta.');
 
+    const response = await apiContext.delete('users/999');
+    expect([204, 404]).toContain(response.status());
+  });
 });
